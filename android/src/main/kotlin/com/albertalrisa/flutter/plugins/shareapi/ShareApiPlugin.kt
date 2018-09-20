@@ -1,4 +1,4 @@
-package com.albertalrisa.flutter.plugins.shareapi.shareapi
+package com.albertalrisa.flutter.plugins.shareapi
 
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler

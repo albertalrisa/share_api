@@ -17,7 +17,7 @@ dependencies:
 # The following section is specific to Flutter.
 flutter:
   plugin:
-    androidPackage: com.albertalrisa.flutter.plugins.shareapi.shareapi
+    androidPackage: com.albertalrisa.flutter.plugins.shareapi
     pluginClass: ShareApiPlugin
 
   # To add assets to your plugin package, add an assets section, like this:

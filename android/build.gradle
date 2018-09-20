@@ -1,4 +1,4 @@
-group 'com.albertalrisa.flutter.plugins.shareapi.shareapi'
+group 'com.albertalrisa.flutter.plugins.shareapi'
 version '1.0-SNAPSHOT'
 
 buildscript {

@@ -1,4 +1,4 @@
-package com.albertalrisa.flutter.plugins.shareapi.shareapiexample
+package com.albertalrisa.flutter.plugins.shareapiexample
 
 import android.os.Bundle
 
