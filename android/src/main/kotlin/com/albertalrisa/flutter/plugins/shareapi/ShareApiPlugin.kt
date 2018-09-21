@@ -42,18 +42,8 @@ class ShareApiPlugin(private val registrar: Registrar): MethodCallHandler {
     }
 
     private fun shareFile(path: String) {
-        Log.d("SHARE_IMAGE", "INIT---")
-        Log.d("SHARE_IMAGE", path)
-        Log.d("SHARE_IMAGE", registrar.context().packageName)
-        Log.d("SHARE_IMAGE", authority_name)
-        Log.d("SHARE_IMAGE", registrar.context().cacheDir.absolutePath)
         val imageFile = File(registrar.context().cacheDir, path)
-        Log.d("SHARE_IMAGE", "IMAGEFILE---")
-        Log.d("SHARE_IMAGE", imageFile.absolutePath)
-        Log.d("SHARE_IMAGE", imageFile.name)
-        Log.d("SHARE_IMAGE", imageFile.extension)
         val contentUri = FileProvider.getUriForFile(registrar.context(), authority_name, imageFile)
-        Log.d("SHARE_IMAGE", contentUri.path)
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = "image/jpg"
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
