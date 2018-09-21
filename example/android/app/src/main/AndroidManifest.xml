@@ -35,5 +35,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
+        <!-- Add FileProvider in order to access the shared file -->
+        <provider
+                android:name="android.support.v4.content.FileProvider"
+                android:authorities="com.albertalrisa.flutter.plugins.share_api"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths" />
+        </provider>
     </application>
 </manifest>

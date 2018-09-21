@@ -48,7 +48,46 @@ class _MyAppState extends State<MyApp> {
           title: const Text('Plugin example app'),
         ),
         body: new Center(
-          child: new Text('Running on: $_platformVersion\n'),
+          child: Stack(
+            fit: StackFit.expand,
+            children: <Widget>[
+              Image.asset('assets/image.jpg'),
+              Container(
+                alignment: Alignment(0.5, 1.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    RawMaterialButton(
+                      onPressed: () {
+                        print('shareimage called');
+                        ShareApi.shareImage();
+                      },
+                      fillColor: Colors.lightBlue,
+                      splashColor: Colors.lightBlueAccent,
+                      child: Text(
+                        'Share File Through API',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    RawMaterialButton(
+                      onPressed: () {
+                        print('sharetext called');
+                        ShareApi.shareText();
+                      },
+                      fillColor: Colors.lightBlue,
+                      splashColor: Colors.lightBlueAccent,
+                      child: Text(
+                        'Share Text Through API',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    Center(child: new Text('Running on: $_platformVersion\n')),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
