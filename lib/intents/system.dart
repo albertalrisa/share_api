@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-import 'dart:ui';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
@@ -56,18 +55,23 @@ class SystemUI extends ShareIntent {
     return ShareResult.undefined;
   }
 
-  Future<ShareResult> shareImage(Image image,
+//  Future<Null> _shareBytes(Uint8List content, String storagePath,
+//      Map<String, dynamic> invokeConfig) async {
+//    final file = await File(storagePath).create();
+//    file.writeAsBytesSync(content);
+//
+//    await channel.invokeMethod('share', invokeConfig);
+//  }
+
+  Future<ShareResult> shareImage(Uint8List image,
       {String imageType = "image/*", String prompt}) async {
     try {
       final tempDir = await getTemporaryDirectory();
       String imageName = 'share.png';
       String imagePath = '${tempDir.path}/$imageName';
 
-      final ByteData bytes = await image.toByteData();
-      final Uint8List list = bytes.buffer.asUint8List();
-
       final file = await File(imagePath).create();
-      file.writeAsBytesSync(list);
+      file.writeAsBytesSync(image);
 
       await channel.invokeMethod('share', {
         'handler': {
