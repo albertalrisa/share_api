@@ -15,7 +15,7 @@ class ShareApi {
     return version;
   }
 
-  static final viaSystem = System(_channel);
+  static final viaSystemUI = SystemUI(_channel);
   static final viaFacebook = Facebook(_channel);
   static final viaInstagram = Instagram(_channel);
 }

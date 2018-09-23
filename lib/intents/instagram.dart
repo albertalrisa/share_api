@@ -10,7 +10,7 @@ import 'package:share_api/share_result.dart';
 
 class Instagram extends ShareIntent {
   Instagram(MethodChannel channel) : super(channel);
-  final String handler = 'instagram';
+  final String handlerModule = 'instagram';
 
   Future<ShareResult> shareToStory(FacebookStoryComposer composer) async {
     try {
@@ -60,7 +60,10 @@ class Instagram extends ShareIntent {
       }
 
       await channel.invokeMethod('share', {
-        'handler': 'instagram',
+        'handler': {
+          'module': handlerModule,
+          'function': 'shareToStory',
+        },
         'arguments': {
           'backgroundAssetPath': backgroundAssetName,
           'backgroundMediaType': composer.backgroundMediaType,

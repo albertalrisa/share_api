@@ -10,7 +10,7 @@ import 'package:share_api/share_result.dart';
 
 class Facebook extends ShareIntent {
   Facebook(MethodChannel channel) : super(channel);
-  final String handler = 'facebook';
+  final String handlerModule = 'facebook';
 
   static String _appId = '';
 
@@ -66,7 +66,10 @@ class Facebook extends ShareIntent {
       }
 
       await channel.invokeMethod('share', {
-        'handler': handler,
+        'handler': {
+          'module': handlerModule,
+          'function': 'shareToStory',
+        },
         'arguments': {
           'appId': _appId,
           'backgroundAssetPath': backgroundAssetName,

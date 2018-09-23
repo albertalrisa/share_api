@@ -9,20 +9,27 @@ import 'package:share_api/intents/base.dart';
 import 'package:path/path.dart' as Path;
 import 'package:share_api/share_result.dart';
 
-class System extends ShareIntent {
-  System(MethodChannel channel) : super(channel);
-  final String handler = 'system';
+class SystemUI extends ShareIntent {
+  SystemUI(MethodChannel channel) : super(channel);
+  final String handlerModule = 'system';
 
-  Future<ShareResult> shareText(String text) async {
+  Future<ShareResult> shareText(String text, {String prompt}) async {
     final String result = await channel.invokeMethod('share', {
-      'handler': 'system',
-      'type': 'text',
-      'argument': {'text': text}
+      'handler': {
+        'module': handlerModule,
+        'function': 'shareText',
+      },
+      'arguments': {
+        'text': text,
+        'prompt': prompt,
+        'type': 'text/plain',
+      }
     });
     return ShareResult.undefined;
   }
 
-  Future<ShareResult> shareFile(File file) async {
+  Future<ShareResult> shareFile(File file,
+      {String fileType = "file/*", String prompt}) async {
     try {
       final tempDir = await getTemporaryDirectory();
       String filename = Path.basename(file.path);
@@ -31,9 +38,15 @@ class System extends ShareIntent {
       file.copy(filePath);
 
       await channel.invokeMethod('share', {
-        'handler': 'system',
-        'type': 'file',
-        'argument': {'file_url': file}
+        'handler': {
+          'module': handlerModule,
+          'function': 'shareFile',
+        },
+        'arguments': {
+          'file_url': filename,
+          'prompt': prompt,
+          'type': fileType,
+        }
       });
     } on Exception catch (e) {
 //      throw e;
@@ -43,7 +56,8 @@ class System extends ShareIntent {
     return ShareResult.undefined;
   }
 
-  Future<ShareResult> shareImage(Image image) async {
+  Future<ShareResult> shareImage(Image image,
+      {String imageType = "image/*", String prompt}) async {
     try {
       final tempDir = await getTemporaryDirectory();
       String imageName = 'share.png';
@@ -56,9 +70,15 @@ class System extends ShareIntent {
       file.writeAsBytesSync(list);
 
       await channel.invokeMethod('share', {
-        'handler': 'system',
-        'type': 'image',
-        'argument': {'image_url': imageName}
+        'handler': {
+          'module': handlerModule,
+          'function': 'shareImage',
+        },
+        'arguments': {
+          'image_url': imageName,
+          'prompt': prompt,
+          'type': imageType,
+        }
       });
     } on Exception catch (e) {
 //      throw e;
