@@ -1,16 +1,20 @@
 package com.albertalrisa.flutter.plugins.shareapi
 
 import android.content.Intent
-import android.support.v4.content.FileProvider
-import android.util.Log
+import com.albertalrisa.flutter.plugins.shareapi.intents.Facebook
+import com.albertalrisa.flutter.plugins.shareapi.intents.SystemUI
+import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
 import io.flutter.plugin.common.MethodChannel.Result
-import io.flutter.plugin.common.MethodCall
+import io.flutter.plugin.common.PluginRegistry.ActivityResultListener
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import java.io.File
 
-class ShareApiPlugin(private val registrar: Registrar): MethodCallHandler {
+class ShareApiPlugin(private val registrar: Registrar): MethodCallHandler, ActivityResultListener {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
+        return true
+    }
+
     companion object {
         private const val authority_name = "com.albertalrisa.flutter.plugins.share_api"
         private const val channel_name = "com.albertalrisa.flutter.plugins/share_api"
@@ -18,60 +22,34 @@ class ShareApiPlugin(private val registrar: Registrar): MethodCallHandler {
         @JvmStatic
         fun registerWith(registrar: Registrar): Unit {
             val channel = MethodChannel(registrar.messenger(), channel_name)
-            channel.setMethodCallHandler(ShareApiPlugin(registrar))
+            val pluginInstance = ShareApiPlugin(registrar)
+            channel.setMethodCallHandler(pluginInstance)
+            registrar.addActivityResultListener(pluginInstance)
         }
     }
+
+    private val intents = mapOf(
+            "facebook" to Facebook(authority_name, registrar),
+            "system" to SystemUI(authority_name, registrar)
+    )
 
     override fun onMethodCall(call: MethodCall, result: Result): Unit {
         if (call.method.equals("getPlatformVersion")) {
             result.success("Android ${android.os.Build.VERSION.RELEASE}")
         }
-        else if (call.method.equals("shareText")) {
-            share("Oi ini shared!")
-            Log.d("PLUGIN", "Called")
-            result.success("Text shared!")
-        }
-        else if (call.method.equals("shareFile")) {
-            shareFile(call.argument("uri"))
-            Log.d("PLUGIN", "File share active")
-            result.success(null)
+        else if(call.method == "share") {
+            val handler:Map<String, String> = call.argument("handler")
+            val module = handler["module"]
+            if(intents.containsKey(module)){
+                val function = handler["function"]
+                intents[module]!!.execute(function, call.argument("arguments"), result)
+            }
+            else{
+                result.notImplemented()
+            }
         }
         else {
             result.notImplemented()
-        }
-    }
-
-    private fun shareFile(path: String) {
-        val imageFile = File(registrar.context().cacheDir, path)
-        val contentUri = FileProvider.getUriForFile(registrar.context(), authority_name, imageFile)
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "image/jpg"
-        shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
-        val chooserIntent = Intent.createChooser(shareIntent, "Share image using")
-        if(registrar.activity() != null){
-            registrar.activity().startActivity(chooserIntent)
-        }
-        else {
-            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            registrar.context().startActivity(chooserIntent)
-        }
-    }
-
-    private fun share(text:String) {
-        if (text.isEmpty()) {
-            throw IllegalArgumentException("Non-empty text expected");
-        }
-
-        val shareIntent = Intent(Intent.ACTION_SEND)
-        shareIntent.type = "text/plain"
-        shareIntent.putExtra(Intent.EXTRA_TEXT, text)
-        val chooserIntent = Intent.createChooser(shareIntent, null)
-        if(registrar.activity() != null){
-            registrar.activity().startActivity(chooserIntent)
-        }
-        else {
-            chooserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            registrar.context().startActivity(chooserIntent)
         }
     }
 }
