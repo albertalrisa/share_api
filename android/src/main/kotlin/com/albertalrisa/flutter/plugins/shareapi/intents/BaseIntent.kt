@@ -2,14 +2,23 @@ package com.albertalrisa.flutter.plugins.shareapi.intents
 
 import android.app.Activity
 import android.content.Intent
-import android.support.v4.content.FileProvider
+import android.content.pm.PackageManager
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
-import java.io.File
 
-abstract class BaseIntent(val authority_name: String, val registrar: Registrar) {
+abstract class BaseIntent(val authority_name: String, val registrar: Registrar, val activity: Activity) {
 
     abstract val packageName:String?
+
+    fun isInstalled(): Boolean {
+        if(packageName == null) return true
+        val packageManager = activity.packageManager
+        return try {
+            packageManager.getApplicationInfo(packageName, 0).enabled
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
+    }
 
     protected fun isIntentResolvable(intent: Intent): Boolean {
         if (registrar.activity() != null) {
@@ -18,12 +27,8 @@ abstract class BaseIntent(val authority_name: String, val registrar: Registrar) 
         return false
     }
 
-    protected fun getActivity(): Activity {
-        return registrar.activity()
-    }
-
     protected fun runActivity(intent: Intent, activity: Activity? = null) {
-        val baseActivity: Activity? = if(activity == null) activity else registrar.activity()
+        val baseActivity: Activity? = activity ?: this.activity
         if (baseActivity != null) {
             baseActivity.startActivity(intent)
         } else {
@@ -33,7 +38,7 @@ abstract class BaseIntent(val authority_name: String, val registrar: Registrar) 
     }
 
     protected fun runActivityForResult(intent: Intent, requestCode: Int, activity: Activity? = null) {
-        val baseActivity: Activity? = if(activity == null) activity else registrar.activity()
+        val baseActivity: Activity? = activity ?: this.activity
         if (baseActivity != null) {
             baseActivity.startActivityForResult(intent, requestCode)
         } else {

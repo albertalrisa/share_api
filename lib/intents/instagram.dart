@@ -12,24 +12,24 @@ class Instagram extends ShareIntent {
   Instagram(MethodChannel channel) : super(channel);
   final String handlerModule = 'instagram';
 
-  Future<ShareResult> shareToStory(FacebookStoryComposer composer) async {
+  Future<int> shareToStory(FacebookStoryComposer composer) async {
     try {
       final tempDir = await getTemporaryDirectory();
-      String backgroundAssetPath;
-      String stickerAssetPath;
-      String backgroundAssetName = 'backgroundAsset.png';
-      String stickerAssetName = 'stickerAsset.png';
+      String backgroundAssetName;
+      String stickerAssetName;
 
       if (composer.backgroundAsset != null) {
+        backgroundAssetName = 'backgroundAsset.jpg';
         final Uint8List backgroundAssetAsList = composer.backgroundAsset;
-        backgroundAssetPath = '${tempDir.path}/$backgroundAssetName';
+        final backgroundAssetPath = '${tempDir.path}/$backgroundAssetName';
         final file = await File(backgroundAssetPath).create();
         file.writeAsBytesSync(backgroundAssetAsList);
       }
 
       if (composer.stickerAsset != null) {
+        stickerAssetName = 'stickerAsset.png';
         final Uint8List stickerAssetAsList = composer.stickerAsset;
-        stickerAssetPath = '${tempDir.path}/$stickerAssetName';
+        final stickerAssetPath = '${tempDir.path}/$stickerAssetName';
         final file = await File(stickerAssetPath).create();
         file.writeAsBytesSync(stickerAssetAsList);
       }
@@ -53,15 +53,15 @@ class Instagram extends ShareIntent {
         bottomBackgroundColor = '#$sixHexValue';
       }
 
-      await channel.invokeMethod('share', {
+      return await channel.invokeMethod('share', {
         'handler': {
           'module': handlerModule,
           'function': 'shareToStory',
         },
         'arguments': {
-          'backgroundAssetPath': backgroundAssetName,
+          'backgroundAssetName': backgroundAssetName,
           'backgroundMediaType': composer.backgroundMediaType,
-          'stickerAssetPath': stickerAssetName,
+          'stickerAssetName': stickerAssetName,
           'stickerMediaType': composer.stickerMediaType,
           'topBackgroundColor': topBackgroundColor,
           'bottomBackgroundColor': bottomBackgroundColor,
@@ -73,5 +73,14 @@ class Instagram extends ShareIntent {
       print(e);
       return ShareResult.failed;
     }
+  }
+
+  @override
+  Future<bool> isPackageInstalled() async {
+    return await channel.invokeMethod('isInstalled', {
+      'handler': {
+        'module': handlerModule,
+      }
+    });
   }
 }

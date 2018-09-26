@@ -12,7 +12,7 @@ class SystemUI extends ShareIntent {
   SystemUI(MethodChannel channel) : super(channel);
   final String handlerModule = 'system';
 
-  Future<ShareResult> shareText(String text, {String prompt}) async {
+  Future<int> shareText(String text, {String prompt}) async {
     final String result = await channel.invokeMethod('share', {
       'handler': {
         'module': handlerModule,
@@ -27,7 +27,7 @@ class SystemUI extends ShareIntent {
     return ShareResult.undefined;
   }
 
-  Future<ShareResult> shareFile(File file,
+  Future<int> shareFile(File file,
       {String fileType = "file/*", String prompt}) async {
     try {
       final tempDir = await getTemporaryDirectory();
@@ -63,11 +63,11 @@ class SystemUI extends ShareIntent {
 //    await channel.invokeMethod('share', invokeConfig);
 //  }
 
-  Future<ShareResult> shareImage(Uint8List image,
+  Future<int> shareImage(Uint8List image,
       {String imageType = "image/*", String prompt}) async {
     try {
       final tempDir = await getTemporaryDirectory();
-      String imageName = 'share.png';
+      String imageName = 'share.jpg';
       String imagePath = '${tempDir.path}/$imageName';
 
       final file = await File(imagePath).create();
@@ -90,5 +90,14 @@ class SystemUI extends ShareIntent {
       return ShareResult.failed;
     }
     return ShareResult.undefined;
+  }
+
+  @override
+  Future<bool> isPackageInstalled() async {
+    return await channel.invokeMethod('isInstalled', {
+      'handler': {
+        'module': handlerModule,
+      }
+    });
   }
 }

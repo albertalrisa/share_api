@@ -1,4 +1,4 @@
-# share_api
+# Flutter Share Plugin
 
 Flutter Plugin for sharing contents to social media.
 

@@ -7,6 +7,8 @@ abstract class ShareIntent {
   MethodChannel channel;
   ShareIntent(this.channel);
 
+  Future<bool> isPackageInstalled();
+
   Future<Uint8List> getBytesFromFile(File file) async {
     final bytes = await file.readAsBytes();
     return bytes;
