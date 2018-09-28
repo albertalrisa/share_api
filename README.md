@@ -17,6 +17,53 @@ This plugin is still in development. Specifications and APIs may change in the s
 | Facebook Story | ✅ | ❌ | ✅ | Images (Background and Sticker)|
 | Instagram Story | ✅ | ❌ | ❌ | Images (Background and Sticker)|
 
+## Configuration
+
+### Sharing Images and Files
+
+In order to share files and/or images, you will need to add the following:
+
+#### Android
+
+In the `android/app/src/main/AndroidManifest.xml`, add the following in the `manifest/application`:
+
+```xml
+<!-- Add FileProvider in order to access the shared file -->
+<provider
+        android:name="android.support.v4.content.FileProvider"
+        android:authorities="com.albertalrisa.flutter.plugins.share_api"
+        android:exported="false"
+        android:grantUriPermissions="true">
+    <meta-data
+            android:name="android.support.FILE_PROVIDER_PATHS"
+            android:resource="@xml/file_paths" />
+</provider>
+```
+
+After adding the File Provider to the manifest, create a file named `file_paths.xml` in the `app/src/main/res/xml` 
+folder:
+
+```xml
+<?xml version="1.0" encoding="utf-8"?>
+<paths>
+    <cache-path name="images" path="/"/>
+</paths>
+```
+
+## Usage
+
+The module is accessed statically by calling `ShareApi.via[module].[function]()`.
+
+The following functions are available:
+
+| Module     | Function         |
+| ---------- | ---------------- |
+| System UI  | `shareText()`    |
+|            | `shareFile()`    |
+|            | `shareImage()`   |
+| Facebook   | `shareToStory()` |
+| Instagram  | `shareToStory()` |
+
 ## Development Road Map
 
 * iOS Compatibility for System UI, Facebook Story, and Instagram Story

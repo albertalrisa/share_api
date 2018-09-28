@@ -1,13 +1,9 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'dart:async';
 
 import 'package:flutter/services.dart';
 import 'package:share_api/composers/facebook_story.dart';
 import 'package:share_api/share_api.dart';
-import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
 
 void main() => runApp(new MyApp());
 
