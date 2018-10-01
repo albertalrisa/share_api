@@ -64,6 +64,23 @@ The following functions are available:
 | Facebook   | `shareToStory()` |
 | Instagram  | `shareToStory()` |
 
+## Return Values
+
+All share functions will return an integer representing the return value of the activity called. 
+If the function does not support obtaining the operation result, `ShareResult.undefined` or `0x00` is given.
+Otherwise, the return value will be one of three possible values, which are `ok`, `canceled`, and `failed`.
+As of now, only Facebook responds with proper value, therefore running the other functions will always 
+return `undefined`.
+
+There are four possible values:
+
+| Value                            | Meaning                                                                          |
+| -------------------------------- | -------------------------------------------------------------------------------- |
+| `ShareResult.undefined` (`0x00`) | The share function does not support return values                                |
+| `ShareResult.ok` (`0x01`)        | The share function has completed successfully, and the content has been shared   |
+| `ShareResult.canceled` (`0x02`)  | The user canceled the share action and return back to the application            |
+| `ShareResult.failed` (`0x03`)    | The share function failed to complete. Mostly due to exceptions and other errors |  
+
 ## Development Road Map
 
 * iOS Compatibility for System UI, Facebook Story, and Instagram Story

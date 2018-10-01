@@ -13,7 +13,7 @@ class SystemUI extends ShareIntent {
   final String handlerModule = 'system';
 
   Future<int> shareText(String text, {String prompt}) async {
-    final String result = await channel.invokeMethod('share', {
+    await channel.invokeMethod('share', {
       'handler': {
         'module': handlerModule,
         'function': 'shareText',
@@ -48,20 +48,11 @@ class SystemUI extends ShareIntent {
         }
       });
     } on Exception catch (e) {
-//      throw e;
       print(e);
       return ShareResult.failed;
     }
     return ShareResult.undefined;
   }
-
-//  Future<Null> _shareBytes(Uint8List content, String storagePath,
-//      Map<String, dynamic> invokeConfig) async {
-//    final file = await File(storagePath).create();
-//    file.writeAsBytesSync(content);
-//
-//    await channel.invokeMethod('share', invokeConfig);
-//  }
 
   Future<int> shareImage(Uint8List image,
       {String imageType = "image/*", String prompt}) async {
@@ -85,7 +76,6 @@ class SystemUI extends ShareIntent {
         }
       });
     } on Exception catch (e) {
-//      throw e;
       print(e);
       return ShareResult.failed;
     }

@@ -3,7 +3,9 @@ package com.albertalrisa.flutter.plugins.shareapi.intents
 import android.app.Activity
 import android.content.Intent
 import android.support.v4.content.FileProvider
-import com.albertalrisa.flutter.plugins.shareapi.ShareResult
+import com.albertalrisa.flutter.plugins.shareapi.requests.SYSTEMUI_SHARE_FILE
+import com.albertalrisa.flutter.plugins.shareapi.requests.SYSTEMUI_SHARE_IMAGE
+import com.albertalrisa.flutter.plugins.shareapi.requests.SYSTEMUI_SHARE_TEXT
 import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import java.io.File
@@ -42,9 +44,7 @@ class SystemUI(authority_name: String, registrar: Registrar, activity: Activity)
         shareIntent.putExtra(Intent.EXTRA_TEXT, text)
 
         val chooserIntent = Intent.createChooser(shareIntent, prompt)
-        runActivity(chooserIntent)
-
-        result.success(ShareResult.Undefined)
+        runActivityForResult(chooserIntent, SYSTEMUI_SHARE_TEXT)
     }
 
     private fun shareFile(file:String?, mime:String, prompt: String?, result: Result) {
@@ -62,9 +62,7 @@ class SystemUI(authority_name: String, registrar: Registrar, activity: Activity)
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
 
         val chooserIntent = Intent.createChooser(shareIntent, prompt)
-        runActivity(chooserIntent)
-
-        result.success(ShareResult.Undefined)
+        runActivityForResult(chooserIntent, SYSTEMUI_SHARE_FILE)
     }
 
     private fun shareImage(image:String?, mime:String, prompt: String?, result: Result) {
@@ -82,8 +80,6 @@ class SystemUI(authority_name: String, registrar: Registrar, activity: Activity)
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
 
         val chooserIntent = Intent.createChooser(shareIntent, prompt)
-        runActivity(chooserIntent)
-
-        result.success(ShareResult.Undefined)
+        runActivityForResult(chooserIntent, SYSTEMUI_SHARE_IMAGE)
     }
 }

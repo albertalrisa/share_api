@@ -1,3 +1,3 @@
 package com.albertalrisa.flutter.plugins.shareapi.requests
 
-val FACEBOOK_SHARE_TO_STORY = 201
+const val FACEBOOK_SHARE_TO_STORY = 5201

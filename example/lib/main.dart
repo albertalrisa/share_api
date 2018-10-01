@@ -13,7 +13,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
   Map<String, String> isInstalled = {
     "facebook": "unknown",
     "instagram": "unknown",
@@ -23,28 +22,7 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    initPlatformState();
     getInstalledPackages();
-  }
-
-  // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
-    // Platform messages may fail, so we use a try/catch PlatformException.
-    try {
-      platformVersion = await ShareApi.platformVersion;
-    } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
-    }
-
-    // If the widget was removed from the tree while the asynchronous platform
-    // message was in flight, we want to discard the reply rather than calling
-    // setState to update our non-existent appearance.
-    if (!mounted) return;
-
-    setState(() {
-      _platformVersion = platformVersion;
-    });
   }
 
   Future<void> getInstalledPackages() async {
@@ -74,17 +52,15 @@ class _MyAppState extends State<MyApp> {
 
   bool _isLoading = false;
 
-  void shareToFacebookStory() async {}
-
   void shareToInstagramStory() async {
     var image = await rootBundle.load('assets/image.jpg');
     var bytedata = image.buffer.asUint8List();
-    var fou = await rootBundle.load('assets/fou.png');
-    var foudata = fou.buffer.asUint8List();
+    var sticker = await rootBundle.load('assets/image.png');
+    var stickerdata = sticker.buffer.asUint8List();
     var composer = FacebookStoryComposer(
-//      backgroundAsset: bytedata,
-//      backgroundMediaType: 'image/*',
-      stickerAsset: foudata,
+      backgroundAsset: bytedata,
+      backgroundMediaType: 'image/*',
+      stickerAsset: stickerdata,
       stickerMediaType: 'image/*',
       topBackgroundColor: Color(0xFFFF0000),
       bottomBackgroundColor: Color(0xFF00FF00),
@@ -97,7 +73,7 @@ class _MyAppState extends State<MyApp> {
   void shareToStory() async {
     var image = await rootBundle.load('assets/image.jpg');
     var bytedata = image.buffer.asUint8List();
-    ShareApi.viaFacebook.setAppId("1241515685991259");
+    ShareApi.viaFacebook.setAppId("0000000000000000");
     var composer = FacebookStoryComposer(
       backgroundAsset: bytedata,
       backgroundMediaType: 'image/*',
@@ -107,10 +83,8 @@ class _MyAppState extends State<MyApp> {
 //      bottomBackgroundColor: Color(0xFF00FF00),
     );
     ShareApi.viaFacebook.shareToStory(composer).then((response) {
-      print(response);
+      print('Facebook $response');
     });
-//    var response = await ShareApi.viaFacebook.shareToStory(composer);
-//    print("Facebook $response");
   }
 
   void shareImage() async {
@@ -119,16 +93,15 @@ class _MyAppState extends State<MyApp> {
     });
     var image = await rootBundle.load('assets/image.jpg');
     var bytes = image.buffer.asUint8List();
-//    var httpClient = HttpClient();
-//    var request = await httpClient.getUrl(Uri.parse(
-//        'https://i.pinimg.com/originals/80/39/74/80397406370badaca3493ce4e84d4786.jpg'));
-//    var response = await request.close();
-//    var bytes = await consolidateHttpClientResponseBytes(response);
     ShareApi.viaSystemUI.shareImage(bytes, imageType: 'image/png');
 
     setState(() {
       _isLoading = false;
     });
+  }
+
+  void shareText() {
+    ShareApi.viaSystemUI.shareText("Shared!");
   }
 
   @override
@@ -182,22 +155,18 @@ class _MyAppState extends State<MyApp> {
                             ),
                     ),
                     RawMaterialButton(
-                      onPressed: () {
-                        shareImage();
-                      },
+                      onPressed: shareImage,
                       fillColor: Colors.lightBlue,
                       splashColor: Colors.lightBlueAccent,
                       child: _isLoading
                           ? Center(child: CircularProgressIndicator())
                           : Text(
-                              'Share File Through API',
+                              'Share Image Through API',
                               style: TextStyle(color: Colors.white),
                             ),
                     ),
                     RawMaterialButton(
-                      onPressed: () {
-                        ShareApi.viaSystemUI.shareText("Kemosaba!");
-                      },
+                      onPressed: shareText,
                       fillColor: Colors.lightBlue,
                       splashColor: Colors.lightBlueAccent,
                       child: Text(
@@ -205,7 +174,6 @@ class _MyAppState extends State<MyApp> {
                         style: TextStyle(color: Colors.white),
                       ),
                     ),
-                    Center(child: new Text('Running on: $_platformVersion\n')),
                   ],
                 ),
               ),

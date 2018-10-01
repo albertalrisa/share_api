@@ -3,8 +3,7 @@ package com.albertalrisa.flutter.plugins.shareapi
 import android.app.Activity
 import android.content.Intent
 import com.albertalrisa.flutter.plugins.shareapi.intents.*
-import com.albertalrisa.flutter.plugins.shareapi.requests.FACEBOOK_SHARE_TO_STORY
-import com.albertalrisa.flutter.plugins.shareapi.requests.INSTAGRAM_SHARE_TO_STORY
+import com.albertalrisa.flutter.plugins.shareapi.requests.*
 import io.flutter.plugin.common.MethodCall
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler
@@ -23,7 +22,12 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
                 result.success(ShareResult.Ok)
             }
             else{
-                result.success(ShareResult.Canceled)
+                if(supportResult.containsValue(requestCode)) {
+                    result.success(ShareResult.Canceled)
+                }
+                else {
+                    result.success(ShareResult.Undefined)
+                }
             }
             return true
         }
@@ -51,7 +55,15 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
 
     private val activityRequestCodes = mapOf(
             "Facebook.shareToStory" to FACEBOOK_SHARE_TO_STORY,
-            "Instagram.shareToStory" to INSTAGRAM_SHARE_TO_STORY)
+            "Instagram.shareToStory" to INSTAGRAM_SHARE_TO_STORY,
+            "SystemUI.shareText" to SYSTEMUI_SHARE_TEXT,
+            "SystemUI.shareImage" to SYSTEMUI_SHARE_IMAGE,
+            "SystemUI.shareFile" to SYSTEMUI_SHARE_FILE
+    )
+
+    private val supportResult = mapOf(
+            "Facebook.shareToStory" to FACEBOOK_SHARE_TO_STORY
+    )
 
     private var currentCallResult: Result? = null
 
