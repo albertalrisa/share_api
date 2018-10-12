@@ -1,5 +1,9 @@
 # Change Log (share_api)
 
+## 0.0.5
+* **Nullable Problem Fix**
+* Fix some variables being declared as nullable where a non-nullable one is expected
+
 ## 0.0.4
 * **Provider Authorities**
 * Change the provider authorities to match the project package name, reducing chance of collision (breaking change)

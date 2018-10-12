@@ -46,11 +46,6 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
         }
     }
 
-    init {
-        val packageName = registrar.context().packageName
-        val authority_name = packageName + authority_suffix
-    }
-
     private val authorityName = registrar.context().packageName + authority_suffix
 
     private var intents: Map<String, BaseIntent> = mapOf(
@@ -79,7 +74,7 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
             return
         }
         else if(call.method == "share") {
-            val handler:Map<String, String> = call.argument("handler")
+            val handler:Map<String, String> = call.argument("handler")!!
             val module = handler["module"]
             if(intents.containsKey(module)){
                 val function = handler["function"]
@@ -94,7 +89,7 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
             }
         }
         else if(call.method == "isInstalled") {
-            val handler:Map<String, String> = call.argument("handler")
+            val handler:Map<String, String> = call.argument("handler")!!
             val module = handler["module"]
             if(intents.containsKey(module)){
                 result.success(intents[module]!!.isInstalled())
