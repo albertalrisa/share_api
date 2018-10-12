@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/services.dart';
 import 'package:share_api/intents/facebook.dart';
 import 'package:share_api/intents/instagram.dart';

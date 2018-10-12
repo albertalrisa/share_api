@@ -35,9 +35,8 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
     }
 
     companion object {
-        private const val authority_name = "com.albertalrisa.flutter.plugins.share_api"
         private const val channel_name = "com.albertalrisa.flutter.plugins/share_api"
-
+        private const val authority_suffix = ".com.albertalrisa.share_api"
         @JvmStatic
         fun registerWith(registrar: Registrar): Unit {
             val channel = MethodChannel(registrar.messenger(), channel_name)
@@ -47,10 +46,17 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
         }
     }
 
-    private val intents = mapOf(
-            "facebook" to Facebook(authority_name, registrar, activity),
-            "instagram" to Instagram(authority_name, registrar, activity),
-            "system" to SystemUI(authority_name, registrar, activity)
+    init {
+        val packageName = registrar.context().packageName
+        val authority_name = packageName + authority_suffix
+    }
+
+    private val authorityName = registrar.context().packageName + authority_suffix
+
+    private var intents: Map<String, BaseIntent> = mapOf(
+            "facebook" to Facebook(authorityName, registrar, activity),
+            "instagram" to Instagram(authorityName, registrar, activity),
+            "system" to SystemUI(authorityName, registrar, activity)
     )
 
     private val activityRequestCodes = mapOf(
@@ -78,7 +84,12 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
             if(intents.containsKey(module)){
                 val function = handler["function"]
                 currentCallResult = result
-                intents[module]!!.execute(function, call.argument("arguments"), result)
+                val arguments:Map<String, String>? = call.argument("arguments")
+                if(arguments == null){
+                    result.error("InvalidArgument", "Arguments must be of type Map<String, String>", arguments)
+                    return
+                }
+                intents[module]!!.execute(function, call.argument("arguments")!!, result)
                 return
             }
         }

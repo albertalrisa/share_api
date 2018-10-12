@@ -1,5 +1,11 @@
 # Change Log (share_api)
 
+## 0.0.4
+* **Provider Authorities**
+* Change the provider authorities to match the project package name, reducing chance of collision (breaking change)
+* Fix an error caused by Kotlin implicitly convert the arguments from Flutter into a nullable type
+* Documentation is updated to match the new provider authorities setting
+
 ## 0.0.3
 
 * **Instagram Share Result Fix and Default Function Removal**

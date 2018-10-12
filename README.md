@@ -31,7 +31,7 @@ In the `android/app/src/main/AndroidManifest.xml`, add the following in the `man
 <!-- Add FileProvider in order to access the shared file -->
 <provider
         android:name="android.support.v4.content.FileProvider"
-        android:authorities="com.albertalrisa.flutter.plugins.share_api"
+        android:authorities="${applicationId}.com.albertalrisa.share_api"
         android:exported="false"
         android:grantUriPermissions="true">
     <meta-data
