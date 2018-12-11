@@ -84,8 +84,12 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
                     result.error("InvalidArgument", "Arguments must be of type Map<String, String>", arguments)
                     return
                 }
-                intents[module]!!.execute(function, call.argument("arguments")!!, result)
-                return
+                try {
+                    intents[module]!!.execute(function, call.argument("arguments")!!, result)
+                    return
+                } catch (e: Exception) {
+                    result.error("", "", null)
+                }
             }
         }
         else if(call.method == "isInstalled") {
