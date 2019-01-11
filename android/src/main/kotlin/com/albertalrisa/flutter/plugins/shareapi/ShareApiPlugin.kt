@@ -88,7 +88,7 @@ class ShareApiPlugin(registrar: Registrar, activity: Activity): MethodCallHandle
                     intents[module]!!.execute(function, call.argument("arguments")!!, result)
                     return
                 } catch (e: Exception) {
-                    result.error("", "", null)
+                    result.error("SharingException", "Sharing to module ${module} failed", e)
                 }
             }
         }
