@@ -13,10 +13,8 @@ protocol ShareIntent {
 
 extension ShareIntent {
     func isPackageInstalled() -> Bool {
-        print("Querying urlScheme")
         return urlSchemes.contains {
             let appUrl = URL(string: $0)
-            print("Querying \(appUrl)")
             return UIApplication.shared.canOpenURL(appUrl! as URL)
         }
     }
