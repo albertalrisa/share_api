@@ -6,8 +6,15 @@
 //
 
 class Facebook: ShareIntent {
-    func execute(function: String, arguments: Dictionary<String, String>, result: @escaping FlutterResult) {
-        result(FlutterMethodNotImplemented)
+    func execute(function: String, arguments: Dictionary<String, String?>, result: @escaping FlutterResult) {
+        switch function {
+            "shareToStory": self.shareToStory(arguments, result);
+        default: result(FlutterMethodNotImplemented);
+        }
+    }
+    
+    func shareToStory(arguments: Dictionary<String, String?>, result @escaping FlutterResult) {
+        
     }
     
     var urlSchemes = [

@@ -7,7 +7,7 @@
 
 protocol ShareIntent {
     func isPackageInstalled() -> Bool
-    func execute(function: String, arguments: Dictionary<String, String>, result: @escaping FlutterResult)
+    func execute(function: String, arguments: Dictionary<String, String?>, result: @escaping FlutterResult)
     var urlSchemes: [String] {get set}
 }
 

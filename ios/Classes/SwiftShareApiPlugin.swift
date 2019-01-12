@@ -19,48 +19,62 @@ public class SwiftShareApiPlugin: NSObject, FlutterPlugin {
     case "getPlatformVersion":
         result("iOS " + UIDevice.current.systemVersion)
     case "share":
-        self.share(call.arguments, result: result)
+        self.share(call.arguments as? Dictionary<String, Any?>, result: result)
     case "isInstalled":
-        self.isInstalled(call.arguments, result: result)
+        self.isInstalled(call.arguments as? Dictionary<String, Any?>, result: result)
     default:
         result(FlutterMethodNotImplemented)
     }
-    
   }
     
-    private func share(_ arguments: Any?, result: @escaping FlutterResult) {
-        let args = arguments as! Dictionary<String, Any?>
-        let handler = args["handler"] as! Dictionary<String, String>
-        let module = handler["module"] ?? ""
-        if intents.keys.contains(module) {
-            let intent = intents["module"]!
-            let function = handler["function"] ?? ""
-            if let functionArguments = args["arguments"] {
-                do {
-                    try intent.execute(function: function, arguments: functionArguments as! Dictionary<String, String>, result: result)
-                } catch {
-                    result(FlutterError(code: "SharingException", message: "Sharing to module \(module) failed", details: ""))
+    private func share(_ callArguments: Dictionary<String, Any?>?, result: @escaping FlutterResult) {
+        if let args = callArguments {
+            let handler = args["handler"] as! Dictionary<String, String>
+            let module = handler["module"] ?? ""
+            if intents.keys.contains(module) {
+                let intent = intents[module]!
+                let function = handler["function"] ?? ""
+                if let functionArguments = args["arguments"] {
+                    let fnArgs = functionArguments as! Dictionary<String, String?>
+                    intent.execute(function: function, arguments: fnArgs, result: result)
                 }
+                else {
+                    result(FlutterError(code: "InvalidArgument", message: "Arguments must be of type Dictionary<String, String>", details: args["arguments"] ?? ""))
+                }
+//                let functionArguments = args["arguments"] as! Dictionary<String, String>
+//                print(functionArguments)
+//                print(args["arguments"])
+//                if let fnArgs = functionArguments {
+////                    do {
+//                        intent.execute(function: function, arguments: fnArgs, result: result)
+////                    } catch {
+////                        result(FlutterError(code: "SharingException", message: "Sharing to module \(module) failed", details: ""))
+////                    }
+//                }
             }
             else {
-                result(FlutterError(code: "InvalidArgument", message: "Arguments must be of type Map<String, String>", details: args["arguments"] ?? ""))
+                result(FlutterMethodNotImplemented)
             }
         }
         else {
-            result(FlutterMethodNotImplemented)
+            result(FlutterError(code: "Invalid method call", message: "Method is called without passing any arguments", details: callArguments ?? ""))
         }
     }
     
-    private func isInstalled(_ arguments: Any?, result: @escaping FlutterResult) {
-        let args = arguments as! Dictionary<String, Any?>
-        let handler = args["handler"] as! Dictionary<String, String>
-        let module = handler["module"] ?? ""
-        if intents.keys.contains(module) {
-            let status: Bool = intents[module]!.isPackageInstalled()
-            result(status)
+    private func isInstalled(_ callArguments: Dictionary<String, Any?>?, result: @escaping FlutterResult) {
+        if let args = callArguments {
+            let handler = args["handler"] as! Dictionary<String, String>
+            let module = handler["module"] ?? ""
+            if intents.keys.contains(module) {
+                let status: Bool = intents[module]!.isPackageInstalled()
+                result(status)
+            }
+            else {
+                result(false)
+            }
         }
         else {
-            result(false)
+             result(FlutterError(code: "Invalid method call", message: "Method is called without passing any arguments", details: callArguments ?? ""))
         }
     }
 }

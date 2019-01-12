@@ -10,7 +10,7 @@ class Instagram: ShareIntent {
         "instagram-stories://share"
     ]
     
-    func execute(function: String, arguments: Dictionary<String, String>, result: @escaping FlutterResult) {
+    func execute(function: String, arguments: Dictionary<String, String?>, result: @escaping FlutterResult) {
         result(FlutterMethodNotImplemented)
     }
 }
