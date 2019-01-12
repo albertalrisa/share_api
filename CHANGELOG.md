@@ -1,5 +1,9 @@
 # Change Log (share_api)
 
+## 0.0.6
+* **iOS Implementation**
+* Add iOS implementation for Facebook Story and Instagram Story
+
 ## 0.0.5
 * **Nullable Problem Fix**
 * Fix some variables being declared as nullable where a non-nullable one is expected
