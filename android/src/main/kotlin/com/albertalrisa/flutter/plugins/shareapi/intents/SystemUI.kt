@@ -23,7 +23,7 @@ class SystemUI(authority_name: String, registrar: Registrar, activity: Activity)
                 shareFile(arguments["file_url"], arguments["type"]!!, arguments["prompt"], result)
             }
             "shareImage" -> {
-                shareImage(arguments["image_url"], arguments["type"]!!, arguments["prompt"], arguments["text"]!!, result)
+                shareImage(arguments["image_url"], arguments["type"]!!, arguments["prompt"], arguments["text"], result)
             }
             else -> {
                 result.notImplemented()
