@@ -55,7 +55,7 @@ class SystemUI extends ShareIntent {
   }
 
   Future<int> shareImage(Uint8List image,
-      {String imageType = "image/*", String prompt}) async {
+      {String imageType = "image/*", String text, String prompt}) async {
     try {
       final tempDir = await getTemporaryDirectory();
       String imageName = 'share.jpg';
@@ -71,6 +71,7 @@ class SystemUI extends ShareIntent {
         },
         'arguments': {
           'image_url': imageName,
+          'text': text,
           'prompt': prompt,
           'type': imageType,
         }

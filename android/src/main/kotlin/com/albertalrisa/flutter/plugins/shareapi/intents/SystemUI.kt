@@ -23,7 +23,7 @@ class SystemUI(authority_name: String, registrar: Registrar, activity: Activity)
                 shareFile(arguments["file_url"], arguments["type"]!!, arguments["prompt"], result)
             }
             "shareImage" -> {
-                shareImage(arguments["image_url"], arguments["type"]!!, arguments["prompt"], result)
+                shareImage(arguments["image_url"], arguments["type"]!!, arguments["prompt"], arguments["text"], result)
             }
             else -> {
                 result.notImplemented()
@@ -65,7 +65,7 @@ class SystemUI(authority_name: String, registrar: Registrar, activity: Activity)
         runActivityForResult(chooserIntent, SYSTEMUI_SHARE_FILE)
     }
 
-    private fun shareImage(image:String?, mime:String, prompt: String?, result: Result) {
+    private fun shareImage(image:String?, mime:String, prompt: String?, text: String?, result: Result) {
         if (image.isNullOrEmpty()) {
             val exceptionMessage = "Non-empty local image path expected"
             val exception = IllegalArgumentException(exceptionMessage)
@@ -78,6 +78,7 @@ class SystemUI(authority_name: String, registrar: Registrar, activity: Activity)
         val shareIntent = Intent(Intent.ACTION_SEND)
         shareIntent.type = mime
         shareIntent.putExtra(Intent.EXTRA_STREAM, contentUri)
+        shareIntent.putExtra(Intent.EXTRA_TEXT, text)
 
         val chooserIntent = Intent.createChooser(shareIntent, prompt)
         runActivityForResult(chooserIntent, SYSTEMUI_SHARE_IMAGE)
