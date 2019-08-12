@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_api/composers/facebook_story.dart';
+import 'package:share_api/composers/story_composer.dart';
 import 'package:share_api/intents/base.dart';
 import 'package:share_api/share_result.dart';
 
@@ -12,7 +12,7 @@ class Instagram extends ShareIntent {
   Instagram(MethodChannel channel) : super(channel);
   final String handlerModule = 'instagram';
 
-  Future<int> shareToStory(FacebookStoryComposer composer) async {
+  Future<int> shareToStory(StoryComposer composer) async {
     try {
       final tempDir = await getTemporaryDirectory();
       String backgroundAssetName;
@@ -38,18 +38,12 @@ class Instagram extends ShareIntent {
       String bottomBackgroundColor;
 
       if (composer.topBackgroundColor != null) {
-        final sixHexValue = composer.topBackgroundColor.value
-            .toRadixString(16)
-            .padLeft(8, '0')
-            .substring(2);
+        final sixHexValue = composer.topBackgroundColor.value.toRadixString(16).padLeft(8, '0').substring(2);
         topBackgroundColor = '#$sixHexValue';
       }
 
       if (composer.bottomBackgroundColor != null) {
-        final sixHexValue = composer.bottomBackgroundColor.value
-            .toRadixString(16)
-            .padLeft(8, '0')
-            .substring(2);
+        final sixHexValue = composer.bottomBackgroundColor.value.toRadixString(16).padLeft(8, '0').substring(2);
         bottomBackgroundColor = '#$sixHexValue';
       }
 
@@ -60,8 +54,10 @@ class Instagram extends ShareIntent {
         },
         'arguments': {
           'backgroundAssetName': backgroundAssetName,
+          'backgroundFile': composer.backgroundFile,
           'backgroundMediaType': composer.backgroundMediaType,
           'stickerAssetName': stickerAssetName,
+          'stickerFile': composer.stickerFile,
           'stickerMediaType': composer.stickerMediaType,
           'topBackgroundColor': topBackgroundColor,
           'bottomBackgroundColor': bottomBackgroundColor,

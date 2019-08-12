@@ -8,7 +8,7 @@ import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugin.common.PluginRegistry.Registrar
 import java.io.File
 
-class Instagram(authority_name: String, registrar: Registrar, activity: Activity): BaseIntent(authority_name, registrar, activity) {
+class Instagram(authority_name: String, registrar: Registrar, activity: Activity) : BaseIntent(authority_name, registrar, activity) {
 
     override val packageName = "com.instagram.android"
 
@@ -25,20 +25,33 @@ class Instagram(authority_name: String, registrar: Registrar, activity: Activity
 
     private fun shareToStory(arguments: Map<String, String>, result: MethodChannel.Result) {
         val shareIntent = Intent("com.instagram.share.ADD_TO_STORY")
+
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
         val backgroundAssetName = arguments["backgroundAssetName"]
+        val backgroundFile = arguments["backgroundFile"]
         val stickerAssetName = arguments["stickerAssetName"]
+        val stickerFile = arguments["stickerFile"]
 
-        if(backgroundAssetName == null && stickerAssetName == null) {
-            val exceptionMessage = "Background Asset and Sticker Asset cannot be both null"
-            val exception = IllegalArgumentException(exceptionMessage)
-            result.error("IllegalArgumentException", exceptionMessage, exception)
-            throw exception
-        }
+//        if (backgroundAssetName == null && stickerAssetName == null) {
+//            val exceptionMessage = "Background Asset and Sticker Asset cannot be both null"
+//            val exception = IllegalArgumentException(exceptionMessage)
+//            result.error("IllegalArgumentException", exceptionMessage, exception)
+//            throw exception
+//        }
 
         if (backgroundAssetName != null) {
             val backgroundAsset = File(registrar.context().cacheDir, backgroundAssetName)
+            val backgroundAssetUri = FileProvider.getUriForFile(registrar.context(), authority_name, backgroundAsset)
+            val backgroundMediaType = arguments["backgroundMediaType"]
+            shareIntent.setDataAndType(backgroundAssetUri, backgroundMediaType)
+        }
+
+        if (backgroundFile != null) {
+            val file =  File(backgroundFile);
+
+            val backgroundAsset = File(registrar.context().cacheDir, file.name);
+            file.copyTo(backgroundAsset,true);
             val backgroundAssetUri = FileProvider.getUriForFile(registrar.context(), authority_name, backgroundAsset)
             val backgroundMediaType = arguments["backgroundMediaType"]
             shareIntent.setDataAndType(backgroundAssetUri, backgroundMediaType)
@@ -48,19 +61,32 @@ class Instagram(authority_name: String, registrar: Registrar, activity: Activity
             val stickerAsset = File(registrar.context().cacheDir, stickerAssetName)
             val stickerAssetUri = FileProvider.getUriForFile(registrar.context(), authority_name, stickerAsset)
             val stickerMediaType = arguments["stickerMediaType"]
-            if(backgroundAssetName == null) {
+            if (backgroundAssetName == null) {
                 shareIntent.type = stickerMediaType
             }
             shareIntent.putExtra("interactive_asset_uri", stickerAssetUri)
             activity.grantUriPermission(packageName, stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
-        var topBackgroundColor:String? = arguments["topBackgroundColor"]
-        var bottomBackgroundColor:String? = arguments["bottomBackgroundColor"]
-        if(topBackgroundColor == null) {
-            topBackgroundColor = bottomBackgroundColor
+        if (stickerFile != null) {
+             val file =  File(stickerFile);
+
+           val stickerAsset = File(registrar.context().cacheDir, file.name)
+            file.copyTo(stickerAsset,true);
+            val stickerAssetUri = FileProvider.getUriForFile(registrar.context(), authority_name, stickerAsset)
+            val stickerMediaType = arguments["stickerMediaType"]
+            if (backgroundAssetName == null) {
+                shareIntent.type = stickerMediaType
+            }
+            shareIntent.putExtra("interactive_asset_uri", stickerAssetUri)
+            activity.grantUriPermission(packageName, stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
-        else if(bottomBackgroundColor == null) {
+
+        var topBackgroundColor: String? = arguments["topBackgroundColor"]
+        var bottomBackgroundColor: String? = arguments["bottomBackgroundColor"]
+        if (topBackgroundColor == null) {
+            topBackgroundColor = bottomBackgroundColor
+        } else if (bottomBackgroundColor == null) {
             bottomBackgroundColor = topBackgroundColor
         }
 

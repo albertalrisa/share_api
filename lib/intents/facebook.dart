@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share_api/composers/facebook_story.dart';
+import 'package:share_api/composers/story_composer.dart';
 import 'package:share_api/intents/base.dart';
 import 'package:share_api/share_result.dart';
 
@@ -18,7 +18,7 @@ class Facebook extends ShareIntent {
     _appId = appId;
   }
 
-  Future<int> shareToStory(FacebookStoryComposer composer) async {
+  Future<int> shareToStory(StoryComposer composer) async {
     try {
       final tempDir = await getTemporaryDirectory();
       String backgroundAssetName;
@@ -27,8 +27,7 @@ class Facebook extends ShareIntent {
       if (composer.backgroundAsset != null) {
         backgroundAssetName = 'backgroundAsset.jpg';
         final Uint8List backgroundAssetAsList = composer.backgroundAsset;
-        final String backgroundAssetPath =
-            '${tempDir.path}/$backgroundAssetName';
+        final String backgroundAssetPath = '${tempDir.path}/$backgroundAssetName';
         final file = await File(backgroundAssetPath).create();
         file.writeAsBytesSync(backgroundAssetAsList);
       }
@@ -45,18 +44,12 @@ class Facebook extends ShareIntent {
       String bottomBackgroundColor;
 
       if (composer.topBackgroundColor != null) {
-        final sixHexValue = composer.topBackgroundColor.value
-            .toRadixString(16)
-            .padLeft(8, '0')
-            .substring(2);
+        final sixHexValue = composer.topBackgroundColor.value.toRadixString(16).padLeft(8, '0').substring(2);
         topBackgroundColor = '#$sixHexValue';
       }
 
       if (composer.bottomBackgroundColor != null) {
-        final sixHexValue = composer.bottomBackgroundColor.value
-            .toRadixString(16)
-            .padLeft(8, '0')
-            .substring(2);
+        final sixHexValue = composer.bottomBackgroundColor.value.toRadixString(16).padLeft(8, '0').substring(2);
         bottomBackgroundColor = '#$sixHexValue';
       }
 
