@@ -29,9 +29,9 @@ class Instagram(authority_name: String, registrar: Registrar, activity: Activity
         shareIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
         val backgroundAssetName = arguments["backgroundAssetName"]
-        val backgroundFile = arguments["backgroundFile"]
+        val backgroundFileName = arguments["backgroundFileName"]
         val stickerAssetName = arguments["stickerAssetName"]
-        val stickerFile = arguments["stickerFile"]
+        val stickerFileName = arguments["stickerFileName"]
 
 //        if (backgroundAssetName == null && stickerAssetName == null) {
 //            val exceptionMessage = "Background Asset and Sticker Asset cannot be both null"
@@ -47,11 +47,8 @@ class Instagram(authority_name: String, registrar: Registrar, activity: Activity
             shareIntent.setDataAndType(backgroundAssetUri, backgroundMediaType)
         }
 
-        if (backgroundFile != null) {
-            val file =  File(backgroundFile);
-
-            val backgroundAsset = File(registrar.context().cacheDir, file.name);
-            file.copyTo(backgroundAsset,true);
+        if (backgroundFileName != null) {
+            val backgroundAsset = File(registrar.context().cacheDir, backgroundFileName)
             val backgroundAssetUri = FileProvider.getUriForFile(registrar.context(), authority_name, backgroundAsset)
             val backgroundMediaType = arguments["backgroundMediaType"]
             shareIntent.setDataAndType(backgroundAssetUri, backgroundMediaType)
@@ -68,11 +65,8 @@ class Instagram(authority_name: String, registrar: Registrar, activity: Activity
             activity.grantUriPermission(packageName, stickerAssetUri, Intent.FLAG_GRANT_READ_URI_PERMISSION)
         }
 
-        if (stickerFile != null) {
-             val file =  File(stickerFile);
-
-           val stickerAsset = File(registrar.context().cacheDir, file.name)
-            file.copyTo(stickerAsset,true);
+        if (stickerFileName != null) {
+            val stickerAsset = File(registrar.context().cacheDir, stickerFileName)
             val stickerAssetUri = FileProvider.getUriForFile(registrar.context(), authority_name, stickerAsset)
             val stickerMediaType = arguments["stickerMediaType"]
             if (backgroundAssetName == null) {

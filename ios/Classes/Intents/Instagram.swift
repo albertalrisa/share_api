@@ -20,11 +20,14 @@ class Instagram: ShareIntent {
         
         let backgroundAssetName = arguments["backgroundAssetName"] as? String
         let stickerAssetName = arguments["stickerAssetName"] as? String
+
+        let backgroundFileName = arguments["backgroundFileName"] as? String
+        let stickerFileName = arguments["stickerFileName"] as? String
         
-        if backgroundAssetName == nil && stickerAssetName == nil {
-            result(FlutterError(code: "IllegalArgumentException", message: "Background Asset and Sticker Asset cannot be both null", details: arguments))
-            return
-        }
+        // if backgroundAssetName == nil && stickerAssetName == nil {
+        //     result(FlutterError(code: "IllegalArgumentException", message: "Background Asset and Sticker Asset cannot be both null", details: arguments))
+        //     return
+        // }
         
         let temporaryDirectories = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)
         if temporaryDirectories.isEmpty {
@@ -38,9 +41,21 @@ class Instagram: ShareIntent {
             let backgroundAsset = UIImage(contentsOfFile: backgroundAssetPath.path)
             pasteboardItems.append(["com.instagram.sharedSticker.backgroundImage": backgroundAsset!])
         }
+
+         if backgroundFileName != nil {
+            let backgroundAssetPath = temporaryDirectory.appendingPathComponent(backgroundFileName!)
+            let backgroundAsset = UIImage(contentsOfFile: backgroundAssetPath.path)
+            pasteboardItems.append(["com.instagram.sharedSticker.backgroundImage": backgroundAsset!])
+        }
         
         if stickerAssetName != nil {
             let stickerAssetPath = temporaryDirectory.appendingPathComponent(stickerAssetName!)
+            let stickerAsset = UIImage(contentsOfFile: stickerAssetPath.path)
+            pasteboardItems.append(["com.instagram.sharedSticker.stickerImage": stickerAsset!])
+        }
+        
+        if stickerFileName != nil {
+            let stickerAssetPath = temporaryDirectory.appendingPathComponent(stickerFileName!)
             let stickerAsset = UIImage(contentsOfFile: stickerAssetPath.path)
             pasteboardItems.append(["com.instagram.sharedSticker.stickerImage": stickerAsset!])
         }

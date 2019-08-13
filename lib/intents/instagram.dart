@@ -3,6 +3,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart';
+import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_api/composers/story_composer.dart';
 import 'package:share_api/intents/base.dart';
@@ -17,6 +18,8 @@ class Instagram extends ShareIntent {
       final tempDir = await getTemporaryDirectory();
       String backgroundAssetName;
       String stickerAssetName;
+      String backgroundFileName;
+      String stickerFileName;
 
       if (composer.backgroundAsset != null) {
         backgroundAssetName = 'backgroundAsset.jpg';
@@ -24,6 +27,13 @@ class Instagram extends ShareIntent {
         final backgroundAssetPath = '${tempDir.path}/$backgroundAssetName';
         final file = await File(backgroundAssetPath).create();
         file.writeAsBytesSync(backgroundAssetAsList);
+      }
+
+      if (composer.backgroundFile != null) {
+        File backgroudFile = File(composer.backgroundFile);
+        backgroundFileName = basename(backgroudFile.path);
+        final backgroundFilePath = '${tempDir.path}/$backgroundFileName';
+        final file   = await backgroudFile.copy(backgroundFilePath);
       }
 
       if (composer.stickerAsset != null) {
@@ -34,16 +44,30 @@ class Instagram extends ShareIntent {
         file.writeAsBytesSync(stickerAssetAsList);
       }
 
+       if (composer.stickerFile != null) {
+        File stickerFile = File(composer.stickerFile);
+        stickerFileName = basename(stickerFile.path);
+        final backgroundFilePath = '${tempDir.path}/$stickerFileName';
+        final file   = await stickerFile.copy(backgroundFilePath);
+      }
+
+
       String topBackgroundColor;
       String bottomBackgroundColor;
 
       if (composer.topBackgroundColor != null) {
-        final sixHexValue = composer.topBackgroundColor.value.toRadixString(16).padLeft(8, '0').substring(2);
+        final sixHexValue = composer.topBackgroundColor.value
+            .toRadixString(16)
+            .padLeft(8, '0')
+            .substring(2);
         topBackgroundColor = '#$sixHexValue';
       }
 
       if (composer.bottomBackgroundColor != null) {
-        final sixHexValue = composer.bottomBackgroundColor.value.toRadixString(16).padLeft(8, '0').substring(2);
+        final sixHexValue = composer.bottomBackgroundColor.value
+            .toRadixString(16)
+            .padLeft(8, '0')
+            .substring(2);
         bottomBackgroundColor = '#$sixHexValue';
       }
 
@@ -54,10 +78,10 @@ class Instagram extends ShareIntent {
         },
         'arguments': {
           'backgroundAssetName': backgroundAssetName,
-          'backgroundFile': composer.backgroundFile,
+          'backgroundFileName': backgroundFileName,
           'backgroundMediaType': composer.backgroundMediaType,
           'stickerAssetName': stickerAssetName,
-          'stickerFile': composer.stickerFile,
+          'stickerFileName': stickerFileName,
           'stickerMediaType': composer.stickerMediaType,
           'topBackgroundColor': topBackgroundColor,
           'bottomBackgroundColor': bottomBackgroundColor,
