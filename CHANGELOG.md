@@ -1,5 +1,9 @@
 # Change Log (share_api)
 
+## 0.0.7
+* **BREAKING CHANGE**: Migrate to AndroidX
+* **BREAKING CHANGE**: Updated plugin dependencies
+
 ## 0.0.6
 * **iOS Implementation**
 * Add iOS implementation for Facebook Story and Instagram Story

@@ -14,8 +14,8 @@ This plugin is still in development. Specifications and APIs may change in the s
 | Platform | Android | iOS | Activity Return Value | Notes |
 | ---- | ---- | ---- | ---- | ---- |
 | System UI | ✅ | ❌ | ❌ | Text, Images, and Files |
-| Facebook Story | ✅ | ❌ | ✅ | Images (Background and Sticker)|
-| Instagram Story | ✅ | ❌ | ❌ | Images (Background and Sticker)|
+| Facebook Story | ✅ | ✅ | ✅ | Images (Background and Sticker)|
+| Instagram Story | ✅ | ✅ | ❌ | Images (Background and Sticker)|
 
 ## Configuration
 
