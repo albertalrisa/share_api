@@ -1,17 +1,17 @@
 name: share_api
 description: Flutter Plugin for sharing contents to social media, either from System UI, or directly to the target application. Currently supports Facebook Story and Instagram Story in Android.
-version: 0.0.6
+version: 0.0.7
 author: Albert Richard Sanyoto <me@albertalrisa.com>
-homepage: https://github.com/albertalrisa/share_api
+homepage: https://github.com/arefhosseini/share_api
 
 environment:
-  sdk: ">=2.0.0-dev.68.0 <3.0.0"
+  sdk: ">=2.2.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
-  path_provider: ^0.4.1
+  path_provider: ^1.1.0
   path: ^1.6.2
 
 # For information on the generic Dart part of this file, see the

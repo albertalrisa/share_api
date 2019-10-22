@@ -30,13 +30,13 @@ In the `android/app/src/main/AndroidManifest.xml`, add the following in the `man
 ```xml
 <!-- Add FileProvider in order to access the shared file -->
 <provider
-        android:name="android.support.v4.content.FileProvider"
-        android:authorities="${applicationId}.com.albertalrisa.share_api"
-        android:exported="false"
-        android:grantUriPermissions="true">
+android:name="androidx.core.content.FileProvider"
+    android:authorities="${applicationId}.com.albertalrisa.share_api"
+    android:exported="false"
+    android:grantUriPermissions="true">
     <meta-data
-            android:name="android.support.FILE_PROVIDER_PATHS"
-            android:resource="@xml/file_paths" />
+        android:name="android.support.FILE_PROVIDER_PATHS"
+        android:resource="@xml/file_paths" />
 </provider>
 ```
 

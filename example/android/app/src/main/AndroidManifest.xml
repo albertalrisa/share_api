@@ -1,4 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.albertalrisa.flutter.plugins.shareapiexample">
 
     <!-- The INTERNET permission is required for development. Specifically,
@@ -15,7 +16,8 @@
     <application
         android:name="io.flutter.app.FlutterApplication"
         android:label="share_api_example"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
+        tools:ignore="GoogleAppIndexingWarning">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"
@@ -38,13 +40,13 @@
 
         <!-- Add FileProvider in order to access the shared file -->
         <provider
-                android:name="android.support.v4.content.FileProvider"
-                android:authorities="${applicationId}.com.albertalrisa.share_api"
-                android:exported="false"
-                android:grantUriPermissions="true">
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.com.albertalrisa.share_api"
+            android:exported="false"
+            android:grantUriPermissions="true">
             <meta-data
-                    android:name="android.support.FILE_PROVIDER_PATHS"
-                    android:resource="@xml/file_paths" />
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
         </provider>
     </application>
 </manifest>
